@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GoEvergreenSolar — Solar Panels</title>
+  <meta name="description" content="Sleek, modern solar for California homes. Get an instant estimate and schedule a consultation." />
+  <link rel="icon" href="logo_goevergreensolar.svg">
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#065f46',
+            accent: '#10b981',
+            ink: '#111827',
+            muted: '#6b7280',
+            bgdark: '#0a0a0a',
+            cream: '#f5f6f8'
+          },
+          boxShadow: { soft: '0 6px 30px rgba(0,0,0,0.15)' },
+          borderRadius: { '2xl': '1.25rem' }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root{
+      --bg-dark:#0a0a0a;
+      --bg-darker:#070707;
+      --bg-cream:#f5f6f8;
+    }
+    html{ scroll-behavior:smooth; }
+    html, body { background: linear-gradient(180deg, var(--bg-darker), var(--bg-dark)); color:#fff; }
+    .nav-wrap{ transition: box-shadow .4s ease, background-color .4s ease; }
+    .nav-wrap.is-scrolled{ box-shadow: 0 10px 40px rgba(0,0,0,.35); background-color: rgba(0,0,0,.5); }
+    .backdrop-blur-hero { backdrop-filter: saturate(140%) blur(10px); }
+    .section-light{ position:relative; background:var(--bg-cream); color:#111827; }
+    .section-light::before,
+    .section-light::after{
+      content:""; position:absolute; left:0; right:0; height:120px; pointer-events:none;
+    }
+    .section-light::before{ top:-120px; background:linear-gradient(to bottom, rgba(10,10,10,1), rgba(10,10,10,.6), rgba(10,10,10,.2), rgba(245,246,248,0)); }
+    .section-light::after{ bottom:-120px; background:linear-gradient(to top, rgba(10,10,10,1), rgba(10,10,10,.6), rgba(10,10,10,.2), rgba(245,246,248,0)); }
+    [data-reveal]{ opacity:0; transform: translateY(14px) scale(.98); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+    .reveal-in{ opacity:1 !important; transform: none !important; }
+    .reveal-clip{ position:relative; overflow:hidden; }
+    .reveal-clip img{ transform: scale(1.04); transition: transform 1.2s cubic-bezier(.2,.7,.2,1); }
+    .reveal-clip.reveal-in img{ transform: scale(1); }
+    [data-parallax]{ will-change: transform; }
+    .btn{ transition: transform .25s ease, box-shadow .25s ease; }
+    .btn:hover{ transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.25); }
+    .feature-rail > div{ border-top:1px solid rgba(255,255,255,.06); padding-top:20px; margin-top:20px; }
+    @media (min-width: 768px){
+      .feature-rail{ display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:2rem; }
+      .feature-rail > div{ border-top: none; }
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-accent/30">
+  <script>window.dataLayer = window.dataLayer || [];</script>
+
+  <header id="nav" class="fixed inset-x-0 top-0 z-50">
+    <div class="mx-auto max-w-7xl px-4">
+      <div class="nav-wrap mt-3 flex items-center justify-between rounded-full border border-white/10 bg-black/30 px-4 py-2 backdrop-blur-hero">
+        <a href="#" class="flex items-center gap-2 font-semibold">
+          <img alt="GoEvergreenSolar" src="logo_goevergreensolar.svg" class="h-7 w-auto">
+          <span class="tracking-tight">GoEvergreenSolar</span>
+        </a>
+        <nav aria-label="Main" class="hidden items-center gap-6 text-sm md:flex">
+          <a class="text-white/80 hover:text-white" href="#products">Products</a>
+          <a class="text-white/80 hover:text-white" href="#incentives">Incentives</a>
+          <a class="text-white/80 hover:text-white" href="quote.html">Get a Quote</a>
+          <a class="text-white/80 hover:text-white" href="#estimate">Estimate</a>
+          <a class="text-white/80 hover:text-white" href="#support">Support</a>
+        </nav>
+        <a id="btn-schedule-top" href="https://calendly.com/YOUR-CALENDLY/solar-15min" target="_blank"
+           class="btn rounded-full bg-white px-4 py-2 text-sm font-semibold text-black hover:bg-white/90"
+           onclick="dataLayer.push({event:'cta_click', id:'schedule_top'})">
+           Schedule a Consultation
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="relative h-[92vh] w-full overflow-hidden">
+    <img src="assets/hero-poster.jpg" class="absolute inset-0 h-full w-full object-cover" alt="Hero Poster" data-parallax>
+    <div class="absolute inset-0 bg-black/45"></div>
+
+    <div class="relative z-10 mx-auto flex h-full max-w-7xl items-end px-6 pb-10">
+      <div class="max-w-2xl" data-reveal>
+        <h1 class="text-4xl font-extrabold tracking-tight md:text-6xl">Solar Panels</h1>
+        <p class="mt-3 text-lg text-white/80 md:text-xl">Save on energy. Power your home.</p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a id="btn-order" href="#estimate" class="btn rounded-full border border-white/40 px-6 py-3 font-semibold hover:bg-white/10"
+             onclick="dataLayer.push({event:'cta_click', id:'order_now'})">Estimate Your Savings</a>
+          <a id="btn-quote" href="quote.html"
+             class="btn rounded-full bg-white px-6 py-3 font-semibold text-black hover:bg-white/90"
+             onclick="dataLayer.push({event:'cta_click', id:'quote_from_hero'})">Get a Quote</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light py-16">
+    <div class="mx-auto max-w-7xl px-6 grid gap-10 md:grid-cols-2 items-center">
+      <div data-reveal>
+        <h2 class="text-3xl font-bold">Cut Out the Middleman</h2>
+        <p class="mt-3 text-muted">
+          We keep pricing low by handling design, permitting and installation in-house—no door-to-door dealers or third-party markups.
+          You get transparent bids, factory-level quality control and a single warranty from one team.
+        </p>
+        <ul class="mt-5 space-y-2 text-ink">
+          <li>✅ Lower Cost</li>
+          <li>✅ Direct Warranty</li>
+          <li>✅ Faster Install</li>
+        </ul>
+      </div>
+      <div class="rounded-2xl border border-gray-200 p-6 shadow-soft" data-reveal>
+        <p class="text-sm text-muted">“Evergreen gave us a cleaner design and a lower price than competing quotes. The whole process was simple.”</p>
+        <p class="mt-3 text-sm font-semibold">— Riverside Homeowner</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light py-20">
+    <div class="mx-auto max-w-3xl px-6 text-center" data-reveal>
+      <h2 class="text-3xl font-bold md:text-4xl">Save on Electricity Bills</h2>
+      <p class="mt-4 text-lg text-muted">
+        Generate your own clean energy from the sun. Flexible financing and transparent pricing make it simple to lock in
+        predictable costs and reduce reliance on the grid.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-light py-10">
+    <div class="mx-auto max-w-7xl px-6 grid gap-8 md:grid-cols-2">
+      <div data-reveal>
+        <p class="text-primary font-semibold">Best Price Promise</p>
+        <h2 class="mt-2 text-4xl font-bold">Save More With Us</h2>
+      </div>
+      <p class="text-muted" data-reveal>
+        Real savings from homeowners across California. These aren’t projections—just actual results after switching to solar.
+      </p>
+    </div>
+    <div class="mx-auto max-w-7xl px-6 mt-6" data-reveal>
+      <div class="rounded-2xl bg-teal-800 text-white grid grid-cols-1 md:grid-cols-3">
+        <div class="p-8 text-center">
+          <div class="text-4xl font-extrabold">$324</div>
+          <div class="mt-1 text-white/80">Average Monthly Savings</div>
+        </div>
+        <div class="p-8 text-center">
+          <div class="text-4xl font-extrabold">3000+</div>
+          <div class="mt-1 text-white/80">Projects Completed</div>
+        </div>
+        <div class="p-8 text-center">
+          <div class="text-4xl font-extrabold">38+</div>
+          <div class="mt-1 text-white/80">Years in Business</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light py-20">
+    <div class="mx-auto max-w-7xl px-6 grid gap-10 md:grid-cols-2 items-center">
+      <div class="overflow-hidden rounded-2xl shadow-soft border border-gray-200 reveal-clip" data-reveal>
+        <img src="assets/van-or-house.jpg" alt="Evergreen Solar install" class="w-full h-[420px] object-cover" loading="lazy">
+      </div>
+      <div data-reveal>
+        <p class="text-primary font-semibold">We’ve Got Your Back</p>
+        <h3 class="mt-2 text-3xl font-bold">Post-Installation Promise</h3>
+        <p class="mt-3 text-muted">
+          Every system meets the same high standards—quality equipment, professional installation and complete support.
+          Our certified, insured teams handle your project from start to finish.
+        </p>
+        <a href="#support" class="btn mt-6 inline-block rounded-full bg-primary text-white px-6 py-3 font-semibold">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="products" class="py-16">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="feature-rail">
+        <div data-reveal>
+          <h3 class="text-2xl font-semibold">Sustainable Energy</h3>
+          <p class="mt-3 text-white/70">Power your home with emissions-free energy directly from the sun.</p>
+        </div>
+        <div id="incentives" data-reveal>
+          <h3 class="text-2xl font-semibold">Incentives</h3>
+          <p class="mt-3 text-white/70">Qualify for local incentives to help reduce installation costs.</p>
+        </div>
+        <div data-reveal>
+          <h3 class="text-2xl font-semibold">Monthly Bill Savings</h3>
+          <p class="mt-3 text-white/70">Generate free solar energy and protect against rising utility rates.</p>
+        </div>
+        <div data-reveal>
+          <h3 class="text-2xl font-semibold">Expert Installation</h3>
+          <p class="mt-3 text-white/70">Streamlined process minimizes roof impact and install time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pb-10 pt-2">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="overflow-hidden rounded-2xl border border-white/10 shadow-soft reveal-clip" data-reveal>
+        <img src="assets/sleek.jpg" alt="Sleek roof integration" class="h-[58vh] w-full object-cover" loading="lazy" data-parallax />
+      </div>
+      <div class="mx-auto max-w-4xl py-8" data-reveal>
+        <h3 class="text-3xl font-semibold">Sleek and Durable</h3>
+        <p class="mt-3 text-white/70">
+          Low-profile, all-black panels and trim blend into your roofline for a clean, modern aesthetic. Built for severe
+          weather and long-term performance.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16">
+    <div class="mx-auto grid max-w-7xl items-center gap-10 px-6 md:grid-cols-2">
+      <div data-reveal>
+        <h3 class="text-3xl font-semibold">24/7 Monitoring, Maximum Control</h3>
+        <p class="mt-3 text-white/70">Real-time production and usage monitoring. Alerts, insights and control from your phone.</p>
+      </div>
+      <div class="rounded-2xl border border-white/10 bg-gradient-to-b from-white/10 to-transparent p-4 shadow-soft" data-reveal>
+        <div class="aspect-[9/18] w-full rounded-xl bg-black/70"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16">
+    <div class="mx-auto grid max-w-7xl items-center gap-10 px-6 md:grid-cols-2">
+      <div class="order-2 md:order-1 overflow-hidden rounded-2xl border border-white/10 shadow-soft reveal-clip" data-reveal>
+        <img src="assets/house.jpg" alt="Home with solar and battery" class="h-[50vh] w-full object-cover" loading="lazy" data-parallax />
+      </div>
+      <div class="order-1 md:order-2" data-reveal>
+        <h3 class="text-3xl font-semibold">From Install to Power On</h3>
+        <p class="mt-3 text-white/70">We handle permits, utility approvals and commissioning. Your advisor stays with you from design to PTO.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="estimate" class="section-light py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="mx-auto max-w-3xl text-center" data-reveal>
+        <h3 class="text-3xl font-bold">Instant Estimate</h3>
+        <p class="mt-2 text-muted">Enter two numbers. We’ll show a rough system size and monthly savings.</p>
+      </div>
+      <div class="mx-auto mt-8 max-w-3xl rounded-2xl border border-gray-200 bg-white p-6 shadow-soft" data-reveal>
+        <div class="grid gap-4 md:grid-cols-3">
+          <label class="block text-left">
+            <span class="text-sm font-semibold">Monthly Electric Bill ($)</span>
+            <input id="bill" type="number" class="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2 focus:border-ink focus:outline-none" placeholder="250" />
+          </label>
+          <label class="block text-left">
+            <span class="text-sm font-semibold">Sun Hours / Day</span>
+            <input id="sun" type="number" class="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2 focus:border-ink focus:outline-none" placeholder="5" />
+          </label>
+          <label class="block text-left">
+            <span class="text-sm font-semibold">Utility</span>
+            <select id="utility" class="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2 focus:border-ink focus:outline-none">
+              <option>SCE</option><option>LADWP</option><option>SDG&E</option><option>PG&E</option><option>Other</option>
+            </select>
+          </label>
+        </div>
+        <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+          <button id="btn-estimate" class="btn rounded-full bg-primary px-6 py-3 font-semibold text-white hover:bg-primary/90"
+                  onclick="estimate(); dataLayer.push({event:'estimate_submitted'})">Get My Estimate</button>
+          <div id="out" class="text-lg font-semibold text-ink"></div>
+        </div>
+        <div class="mt-6">
+          <a href="quote.html" class="btn rounded-full border border-ink px-6 py-3 font-semibold inline-block">Continue to Full Quote</a>
+        </div>
+        <p class="mt-3 text-xs text-muted">*Rough estimate only. Final proposal requires site assessment. By using this tool you agree to be contacted via SMS/email. Reply STOP to opt-out.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light py-16">
+    <div class="mx-auto max-w-4xl px-6 text-center" data-reveal>
+      <h3 class="text-3xl font-bold">Get Your Custom Solar Design</h3>
+      <p class="mt-2 text-muted">We’ll verify your roof, usage and incentives, then send a transparent proposal.</p>
+      <div class="mt-6 flex justify-center gap-3">
+        <a href="#estimate" class="btn rounded-full border border-ink px-6 py-3 font-semibold">Get Instant Estimate</a>
+        <a href="quote.html" class="btn rounded-full bg-primary px-6 py-3 font-semibold text-white">Get a Quote</a>
+      </div>
+    </div>
+  </section>
+
+  <footer id="support" class="py-10 text-white/70">
+    <div class="mx-auto grid max-w-7xl gap-6 px-6 md:grid-cols-3">
+      <div data-reveal>
+        <div class="flex items-center gap-2 font-semibold text-white">
+          <img src="logo_goevergreensolar.svg" class="h-5 w-auto" alt="">
+          <span>GoEvergreenSolar</span>
+        </div>
+        <p class="mt-3 text-sm">Licensed C-10 contractor. Serving SoCal.</p>
+      </div>
+      <div class="text-sm" data-reveal>
+        <div class="font-semibold text-white">Company</div>
+        <ul class="mt-3 space-y-2">
+          <li><a class="hover:text-white" href="#products">Products</a></li>
+          <li><a class="hover:text-white" href="#estimate">Estimate</a></li>
+          <li><a class="hover:text-white" href="#">Privacy</a></li>
+        </ul>
+      </div>
+      <div class="text-xs" data-reveal>
+        SMS Consent: By submitting your phone number you agree to receive messages from GoEvergreenSolar. Message & data rates may apply. Reply STOP to opt-out.
+      </div>
+    </div>
+    <div class="mx-auto mt-8 max-w-7xl px-6 text-xs text-white/40">© <span id="yr"></span> GoEvergreenSolar</div>
+  </footer>
+
+  <script>
+    function estimate(){
+      var bill = parseFloat(document.getElementById('bill').value || 0);
+      var sun  = parseFloat(document.getElementById('sun').value || 5);
+      var daily_kWh = bill / 0.35;
+      var size_kW = Math.max(1, Math.round((daily_kWh / Math.max(3, sun)) * 10) / 10);
+      var savings = Math.round(bill * 0.6);
+      document.getElementById('out').textContent = `~${size_kW} kW system • est. $${savings}/mo savings (${document.getElementById('utility').value})`;
+    }
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ e.target.classList.add('reveal-in'); }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
+    document.querySelectorAll('[data-reveal], .reveal-clip').forEach(el=> io.observe(el));
+
+    const parallaxEls = Array.from(document.querySelectorAll('[data-parallax]'));
+    window.addEventListener('scroll', ()=>{
+      const y = window.scrollY || window.pageYOffset;
+      parallaxEls.forEach(el=>{
+        const speed = el.dataset.speed ? parseFloat(el.dataset.speed) : 0.15;
+        el.style.transform = `translateY(${y * speed * 0.1}px)`;
+      });
+      const wrap = document.querySelector('.nav-wrap');
+      if(window.scrollY > 10){ wrap.classList.add('is-scrolled'); } else { wrap.classList.remove('is-scrolled'); }
+    }, { passive:true });
+  </script>
+</body>
+</html>

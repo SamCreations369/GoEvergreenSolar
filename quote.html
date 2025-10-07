@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Get a Quote — GoEvergreenSolar</title>
+  <meta name="description" content="Answer a few quick questions to see if solar is a fit and get a custom quote." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#065f46',
+            accent: '#10b981',
+            ink: '#111827',
+            cream: '#faf6ee',
+            slate: '#0f172a'
+          },
+          borderRadius: { 'pill': '9999px' },
+          boxShadow: { soft:'0 8px 30px rgba(0,0,0,.12)' }
+        }
+      }
+    }
+  </script>
+  <style>
+    html{ scroll-behavior:smooth; }
+    body{ background:#faf6ee; }
+    .progress { transition: width .35s ease; }
+    .fade { opacity:0; transform: translateY(10px); transition: all .35s ease; }
+    .in { opacity:1; transform:none; }
+    .btn{ transition: transform .25s ease, box-shadow .25s ease; }
+    .btn:hover{ transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.15); }
+  </style>
+</head>
+<body class="min-h-screen text-slate-900 antialiased">
+  <script>window.dataLayer = window.dataLayer || [];</script>
+
+  <main class="mx-auto max-w-7xl p-4 md:p-6">
+    <div class="grid gap-6 md:grid-cols-2">
+      <section class="rounded-2xl bg-cream p-6 md:p-10 shadow-soft">
+        <div class="mb-6 flex items-center justify-between">
+          <img alt="GoEvergreenSolar" src="logo_goevergreensolar.svg" class="h-8" />
+          <div class="w-44 rounded-full bg-gray-200">
+            <div id="bar" class="progress h-2 w-[0%] rounded-full bg-slate-800"></div>
+          </div>
+        </div>
+
+        <div id="step-wrap" class="fade in"></div>
+
+        <p class="mt-6 text-xs text-gray-500">
+          By continuing you agree to receive SMS/email from GoEvergreenSolar. Message & data rates may apply. Reply STOP to opt-out.
+        </p>
+      </section>
+
+      <aside class="relative overflow-hidden rounded-2xl shadow-soft">
+        <img id="hero" src="assets/house.jpg" class="h-full w-full object-cover" alt="Home with solar" />
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+      </aside>
+    </div>
+  </main>
+
+  <template id="tpl">
+    <div class="space-y-6">
+      <div class="fade in">
+        <h1 class="text-3xl font-bold leading-tight md:text-4xl" data-title></h1>
+        <p class="mt-2 text-gray-600" data-sub></p>
+      </div>
+      <div class="space-y-3 fade in" data-body></div>
+      <div class="flex items-center gap-3 pt-2 fade in" data-actions></div>
+    </div>
+  </template>
+
+  <script>
+    const WEBHOOK = "https://hooks.zapier.com/hooks/catch/YOUR_ZAPIER_ID/";
+    const state = { homeowner:null, bill:null, billRange:null, address:'', email:'', first:'', last:'', phone:'', utility:'', zip:'' };
+    const steps = [
+      { key:'homeowner', title:"Do you own your home?", sub:"Solar works best for homeowners. Renters can still inquire with landlord approval.",
+        build($b,$a){ $a.append(btn("Yes", ()=>next({homeowner:true})), btnOutline("No", ()=>next({homeowner:false}))); } },
+      { key:'bill', title:"What is your average electric bill?", sub:"Choose a typical monthly range.",
+        build($b,$a){ const sel=selRange(["$0–50","$51–100","$101–150","$151–200","$201–300","$301–400","$401–500","$501–600","$601–700","$701–800","$801+"]);
+          $b.append(labeled("Avg Electric Bill", sel));
+          $a.append(btn("Next", ()=>{ if(!sel.value) return alert("Select a range"); state.billRange=sel.value; next({bill:midFromRange(sel.value)}); })); } },
+      { key:'contact', title:"Good news, you're a great fit!", sub:"Where can we send your free solar quote?",
+        build($b,$a){ const email=input("email","Enter your email address"), first=input("text","First name"), last=input("text","Last name"), phone=input("tel","Phone (for SMS)");
+          $b.append(email,first,last,phone); $a.append(btn("Next", ()=>{ if(!email.value||!first.value||!last.value) return alert("Please complete name and email."); Object.assign(state,{ email:email.value, first:first.value, last:last.value, phone:phone.value }); next({}); })); } },
+      { key:'address', title:"What's your service address?", sub:"We use this to check sun exposure and local incentives.",
+        build($b,$a){ const address=input("text","Street address"), zip=input("text","ZIP code"), utility=select(["SCE","LADWP","SDG&E","PG&E","Other"]); utility.className="w-full rounded-xl border border-gray-300 px-3 py-3";
+          $b.append(address, zip, labeled("Utility", utility)); $a.append(btn("See My Estimate", ()=>{ if(!address.value||!zip.value) return alert("Please add address and ZIP"); Object.assign(state,{ address:address.value, zip:zip.value, utility:utility.value }); next({}); })); } },
+      { key:'result', title:"Your rough solar estimate", sub:"We’ll text/email a full proposal and design after a quick review.",
+        build($b,$a){ const sun=5, daily_kWh=state.bill/0.35, size_kW=Math.max(1, Math.round((daily_kWh/Math.max(3,sun))*10)/10), savings=Math.round((state.bill||0)*0.6);
+          const box=document.createElement('div'); box.className="rounded-2xl border border-gray-200 bg-white p-5 shadow-soft"; box.innerHTML=`<div class="text-2xl font-bold">${size_kW} kW system</div><div class="mt-1 text-gray-600">Est. $${savings}/mo savings (${state.utility||'Utility'})</div><div class="mt-3 text-sm text-gray-500">Bill range: ${state.billRange||'-'}</div>`; $b.append(box);
+          $a.append(btn("Schedule a Consultation", ()=>{ dataLayer.push({event:'cta_click', id:'schedule_from_quote'}); window.location.href="https://calendly.com/YOUR-CALENDLY/solar-15min"; }),
+                   btnOutline("Send Me My Quote", async ()=>{ try{ await fetch(WEBHOOK,{ method:"POST", headers:{'Content-Type':'application/json'}, body:JSON.stringify(state) }); alert("Thanks! We’ll send your custom quote shortly."); dataLayer.push({event:'lead_captured'}); }catch(e){ console.log(e); alert("Saved locally. We'll follow up."); } })); } }
+    ];
+    const heroImgs=["assets/house.jpg","assets/sleek.jpg","assets/hero-poster.jpg","assets/van-or-house.jpg"];
+    let i=0;
+    function render(){ const step=steps[i], t=document.getElementById('tpl').content.cloneNode(true); 
+      t.querySelector('[data-title]').textContent=step.title; t.querySelector('[data-sub]').textContent=step.sub; 
+      step.build(t.querySelector('[data-body]'), t.querySelector('[data-actions]'));
+      const wrap=document.getElementById('step-wrap'); wrap.classList.remove('in'); setTimeout(()=>{ wrap.innerHTML=""; wrap.appendChild(t); wrap.classList.add('in'); }, 150);
+      document.getElementById('bar').style.width=((i)/(steps.length-1))*100+"%"; document.getElementById('hero').src=heroImgs[i % heroImgs.length]; window.scrollTo({top:0,behavior:'smooth'}); }
+    function next(delta){ Object.assign(state,delta); i=Math.min(i+1, steps.length-1); render(); }
+
+    function btn(l,fn){ const b=document.createElement('button'); b.className="btn rounded-pill bg-slate-900 px-6 py-3 font-semibold text-white hover:bg-slate-800"; b.textContent=l; b.onclick=fn; return b; }
+    function btnOutline(l,fn){ const b=document.createElement('button'); b.className="btn rounded-pill border border-slate-900 px-6 py-3 font-semibold hover:bg-black/5"; b.textContent=l; b.onclick=fn; return b; }
+    function input(t,p){ const i=document.createElement('input'); i.type=t; i.placeholder=p; i.className="w-full rounded-xl border border-gray-300 px-3 py-3"; return i; }
+    function select(opts){ const s=document.createElement('select'); opts.forEach(o=>{ const op=document.createElement('option'); op.textContent=o; op.value=o; s.appendChild(op); }); return s; }
+    function labeled(l,n){ const w=document.createElement('label'); w.className="block"; w.innerHTML=`<span class='mb-1 block text-sm font-semibold'>${l}</span>`; w.appendChild(n); return w; }
+    function selRange(arr){ const s=select(arr); s.className="w-full rounded-xl border border-gray-300 px-3 py-3"; return s; }
+    function midFromRange(txt){ const m=txt.match(/\$?(\d+)[–-](\d+)/); if(!m){ return 400; } const a=parseInt(m[1],10), b=parseInt(m[2],10); return Math.round((a+b)/2); }
+    render();
+  </script>
+</body>
+</html>
